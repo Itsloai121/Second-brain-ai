@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Navohaus · Supply Chain AI</title>
+<style>
+:root{
+  --canvas:#050914;--canvas-2:#08101f;--panel:#0a1324;--panel-2:#0d192c;
+  --line:#1d3854;--line-hot:#246b8e;--text:#d9ebf7;--muted:#7892a8;
+  --cyan:#31d7ff;--cyan-soft:rgba(49,215,255,.10);--blue:#388cff;
+  --green:#43e6a0;--orange:#ffad42;--red:#ff5f70;--shadow:rgba(0,0,0,.38)
+}
+*{box-sizing:border-box}
+html{color-scheme:dark}
+body{margin:0;min-height:100vh;color:var(--text);font:14px/1.5 Arial,sans-serif;background:
+  linear-gradient(rgba(49,215,255,.025) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(49,215,255,.025) 1px,transparent 1px),
+  radial-gradient(circle at 80% 0%,rgba(37,111,176,.20),transparent 34%),var(--canvas);
+  background-size:32px 32px,32px 32px,auto,auto
+}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(180deg,transparent 0,rgba(49,215,255,.018) 50%,transparent 100%);background-size:100% 5px;opacity:.45}
+.shell{max-width:1240px;margin:auto;padding:22px 28px 36px}
+header{min-height:74px;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding:14px 18px;background:rgba(8,16,31,.88);border:1px solid var(--line);box-shadow:0 12px 40px var(--shadow);position:relative}
+header:before,header:after,.panel:before,.panel:after,.kpi:before{content:"";position:absolute;width:10px;height:10px;border-color:var(--cyan)}
+header:before,.panel:before{left:-1px;top:-1px;border-left:2px solid var(--cyan);border-top:2px solid var(--cyan)}
+header:after,.panel:after{right:-1px;bottom:-1px;border-right:2px solid var(--cyan);border-bottom:2px solid var(--cyan)}
+.brand{display:flex;gap:14px;align-items:center}.mark{width:42px;height:42px;display:grid;place-items:center;border:1px solid var(--cyan);color:var(--cyan);background:var(--cyan-soft);font:700 18px/1 Consolas,monospace;box-shadow:inset 0 0 18px rgba(49,215,255,.08),0 0 16px rgba(49,215,255,.08);position:relative}.mark:after{content:"";position:absolute;inset:5px;border:1px solid rgba(49,215,255,.22)}
+.brand h1{font-size:18px;letter-spacing:.3px;margin:0;color:#f0f9ff}.brand p{margin:2px 0 0;color:var(--muted);font:12px/1.4 Consolas,monospace;letter-spacing:.15px}
+.status{display:flex;align-items:center;gap:8px;color:var(--green);font:12px Consolas,monospace;text-transform:uppercase;letter-spacing:.7px}.status:before{content:"";width:7px;height:7px;background:var(--green);box-shadow:0 0 12px var(--green)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.kpi{min-height:108px;padding:18px;background:linear-gradient(145deg,rgba(13,25,44,.96),rgba(8,16,31,.96));border:1px solid var(--line);position:relative;overflow:hidden;box-shadow:0 10px 28px var(--shadow)}.kpi:before{left:-1px;top:-1px;border-left:2px solid var(--cyan);border-top:2px solid var(--cyan)}.kpi:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,var(--cyan),transparent 65%);opacity:.65}.kpi b{display:block;font:700 28px/1.1 Consolas,monospace;color:#f2fbff;text-shadow:0 0 18px rgba(49,215,255,.18)}.kpi span{display:block;margin-top:10px;color:var(--muted);font:11px Consolas,monospace;text-transform:uppercase;letter-spacing:1px}.kpi span:before{content:"// ";color:var(--cyan)}
+.grid{display:grid;grid-template-columns:1.34fr .9fr;gap:16px}.panel{border:1px solid var(--line);background:rgba(8,16,31,.94);box-shadow:0 14px 38px var(--shadow);position:relative;min-width:0}.panel-head{height:58px;padding:0 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,rgba(49,215,255,.07),transparent 58%)}.panel-head h2{font:700 13px Consolas,monospace;letter-spacing:.8px;text-transform:uppercase;margin:0;color:#eaf8ff}.panel-head h2:before{content:"[ ";color:var(--cyan)}.panel-head h2:after{content:" ]";color:var(--cyan)}
+.sub{font:11px Consolas,monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}.items{padding:8px 18px 16px;min-height:478px}.item{display:grid;grid-template-columns:1.35fr .65fr .65fr .9fr;gap:10px;align-items:center;padding:15px 2px;border-bottom:1px solid rgba(29,56,84,.72)}.item:hover{background:linear-gradient(90deg,rgba(49,215,255,.045),transparent)}.item:last-child{border:0}.sku{font:700 13px Consolas,monospace;color:var(--cyan);letter-spacing:.3px}.item b{font-family:Consolas,monospace;color:#edfaff}.tag{display:inline-block;padding:4px 8px;border:1px solid rgba(49,215,255,.42);background:var(--cyan-soft);color:var(--cyan);font:10px Consolas,monospace;text-transform:uppercase;letter-spacing:.6px}.tag.critical{border-color:rgba(255,95,112,.55);background:rgba(255,95,112,.10);color:var(--red);box-shadow:inset 3px 0 0 var(--red)}
+.chat{height:544px;display:flex;flex-direction:column}.messages{padding:16px;overflow:auto;flex:1;background:linear-gradient(180deg,rgba(6,13,25,.74),rgba(10,19,36,.74));scrollbar-color:var(--line-hot) var(--canvas-2);scrollbar-width:thin}.msg{max-width:90%;padding:12px 13px;border:1px solid var(--line);margin:0 0 12px;background:var(--panel-2);color:#d9e9f5;white-space:pre-wrap;box-shadow:inset 3px 0 0 var(--line-hot);font-size:13px}.msg:before{content:"SYS / ";display:block;margin-bottom:5px;color:var(--cyan);font:9px Consolas,monospace;letter-spacing:1px}.msg.user{margin-left:auto;background:rgba(56,140,255,.14);border-color:rgba(56,140,255,.48);box-shadow:inset -3px 0 0 var(--blue);color:#f0f8ff}.msg.user:before{content:"USER / ";color:#74afff}.quick{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 14px}.quick button{min-height:36px;padding:7px 10px;border:1px solid var(--line-hot);background:rgba(49,215,255,.045);color:var(--cyan);font:700 10px Consolas,monospace;text-transform:uppercase;letter-spacing:.5px}.quick button:hover{background:var(--cyan-soft);border-color:var(--cyan);box-shadow:0 0 12px rgba(49,215,255,.10)}
+.composer{display:flex;gap:8px;padding:13px;border-top:1px solid var(--line);background:#070e1b}input{flex:1;min-width:0;border:1px solid var(--line);border-radius:0;background:#050b16;color:var(--text);padding:12px 13px;font:13px Consolas,monospace}input::placeholder{color:#5f7890}button{border:1px solid var(--cyan);border-radius:0;background:var(--cyan);color:#03101b;padding:0 17px;font:700 11px Consolas,monospace;text-transform:uppercase;letter-spacing:.8px;min-height:44px;cursor:pointer}button:hover{filter:brightness(1.08);box-shadow:0 0 16px rgba(49,215,255,.18)}button:focus,input:focus{outline:2px solid #8ae9ff;outline-offset:2px}.empty{color:var(--muted);font-family:Consolas,monospace}.empty:before{content:"> ";color:var(--cyan)}
+
+.controlbar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px;padding:10px;background:rgba(8,16,31,.88);border:1px solid var(--line)}
+.controlbar button{min-height:38px;padding:8px 12px;border:1px solid var(--line-hot);background:rgba(49,215,255,.045);color:var(--cyan);font:700 10px Consolas,monospace;text-transform:uppercase;letter-spacing:.55px}.controlbar button:hover{background:var(--cyan-soft);border-color:var(--cyan)}.controlbar button.danger{color:var(--red);border-color:rgba(255,95,112,.55);background:rgba(255,95,112,.06)}
+.modal[hidden]{display:none}.modal{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:20px;background:rgba(1,5,12,.78);backdrop-filter:blur(5px)}.modal-card{width:min(680px,100%);max-height:min(720px,90vh);overflow:auto;border:1px solid var(--line-hot);background:#07111f;box-shadow:0 24px 80px #000;position:relative}.modal-card:before,.modal-card:after{content:"";position:absolute;width:12px;height:12px;border-color:var(--cyan)}.modal-card:before{left:-1px;top:-1px;border-left:2px solid var(--cyan);border-top:2px solid var(--cyan)}.modal-card:after{right:-1px;bottom:-1px;border-right:2px solid var(--cyan);border-bottom:2px solid var(--cyan)}.modal-head{min-height:58px;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,rgba(49,215,255,.08),transparent)}.modal-head h3{margin:0;font:700 13px Consolas,monospace;text-transform:uppercase;letter-spacing:.8px}.close-modal{width:40px;min-height:40px;padding:0;background:transparent;color:var(--red);border:1px solid rgba(255,95,112,.52);font-size:18px}.modal-body{padding:18px}.modal-note{color:var(--muted);font:12px/1.6 Consolas,monospace}.check-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}.check-count{padding:12px;border:1px solid var(--line);background:var(--panel);font:12px Consolas,monospace}.check-count b{display:block;font-size:22px;color:#fff}.check-row{display:grid;grid-template-columns:88px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.check-row:last-child{border-bottom:0}.check-status{font:700 10px Consolas,monospace;text-transform:uppercase;letter-spacing:.6px}.check-status.pass{color:var(--green)}.check-status.warning{color:var(--orange)}.check-status.fail{color:var(--red)}.check-name{font-weight:700;color:#edf9ff}.check-detail{color:var(--muted);font-size:12px;margin-top:2px}.report-form label{display:block;margin-bottom:8px;color:var(--cyan);font:700 11px Consolas,monospace;text-transform:uppercase;letter-spacing:.6px}.report-form textarea{width:100%;min-height:180px;resize:vertical;padding:13px;border:1px solid var(--line);border-radius:0;background:#050b16;color:var(--text);font:13px/1.55 Consolas,monospace}.report-form textarea:focus{outline:2px solid #8ae9ff;outline-offset:2px}.report-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px}.report-status{font:11px Consolas,monospace;color:var(--muted)}.command-list{display:grid;gap:8px}.command-row{display:grid;grid-template-columns:180px 1fr;gap:14px;padding:11px 12px;border:1px solid var(--line);background:rgba(13,25,44,.7)}.command-row code{color:var(--cyan);font:700 11px Consolas,monospace}.command-row span{color:#bdd0df;font-size:12px}
+@media(max-width:780px){.controlbar{display:grid;grid-template-columns:1fr 1fr}.command-row{grid-template-columns:1fr}.check-row{grid-template-columns:72px 1fr}.shell{padding:14px 14px 28px}header{padding:12px}.brand h1{font-size:16px}.brand p{max-width:220px}.status{font-size:10px}.kpis{grid-template-columns:1fr 1fr}.kpi{min-height:96px;padding:15px}.grid{grid-template-columns:1fr}.items{min-height:0}.item{grid-template-columns:1.25fr .75fr}.hide-mobile{display:none}.chat{height:570px}.panel-head{padding:0 14px}.messages{padding:14px}}
+@media(max-width:430px){header{align-items:flex-start}.status{margin-top:6px}.brand{gap:10px}.brand p{max-width:190px}.kpi b{font-size:24px}.quick{gap:6px}.quick button{font-size:9px;padding:6px 8px}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header>
+  <div class="brand"><div class="mark">N</div><div><h1>Navohaus Supply Chain AI</h1><p>Planning signals, grounded answers, approval-first actions</p></div></div>
+  <div class="status">System ready</div>
+</header>
+<div class="kpis" id="kpis">
+  <div class="kpi"><b>—</b><span>Active SKUs</span></div>
+  <div class="kpi"><b>—</b><span>Critical risks</span></div>
+  <div class="kpi"><b>—</b><span>Units on hand</span></div>
+  <div class="kpi"><b>—</b><span>In transit</span></div>
+</div>
+<div class="controlbar" aria-label="Project controls">
+  <button type="button" id="clearChat" class="danger">Clear chat</button>
+  <button type="button" id="systemCheck">System check report</button>
+  <button type="button" id="employeeReport">Employee report</button>
+  <button type="button" id="commandsGuide">Commands &amp; its-functions</button>
+</div>
+<main class="grid">
+  <section class="panel">
+    <div class="panel-head"><h2>Inventory risk board</h2><span class="sub">Live planning view</span></div>
+    <div class="items" id="items"><p class="empty">Loading operating data…</p></div>
+  </section>
+  <section class="panel chat">
+    <div class="panel-head"><h2>Ask the second brain</h2><span class="tag">Grounded</span></div>
+    <div class="messages" id="messages">
+      <div class="msg">Choose a report or type “help” to see every supported command.</div>
+      <div class="quick" aria-label="Quick reports">
+        <button type="button" data-command="inventory status">Inventory</button>
+        <button type="button" data-command="stock risk">Risks</button>
+        <button type="button" data-command="reorder plan">Reorder</button>
+        <button type="button" data-command="demand forecast">Forecast</button>
+        <button type="button" data-command="supplier lead times">Suppliers</button>
+        <button type="button" data-command="logistics status">Logistics</button>
+      </div>
+    </div>
+    <form class="composer" id="form"><input id="question" aria-label="Supply chain question" placeholder="What should we reorder?" required><button>Ask</button></form>
+  </section>
+</main>
+</div>
+
+<div class="modal" id="checkModal" role="dialog" aria-modal="true" aria-labelledby="checkTitle" hidden>
+  <div class="modal-card"><div class="modal-head"><h3 id="checkTitle">Automated system check</h3><button class="close-modal" type="button" data-close aria-label="Close">×</button></div><div class="modal-body" id="checkResults"><p class="modal-note">Preparing checks…</p></div></div>
+</div>
+<div class="modal" id="reportModal" role="dialog" aria-modal="true" aria-labelledby="reportTitle" hidden>
+  <div class="modal-card"><div class="modal-head"><h3 id="reportTitle">Employee project report</h3><button class="close-modal" type="button" data-close aria-label="Close">×</button></div><div class="modal-body"><p class="modal-note">Describe a missing feature, improvement, bug, or anything the project needs added.</p><form class="report-form" id="reportForm"><label for="reportText">Report details</label><textarea id="reportText" maxlength="2000" required placeholder="Example: Add low-stock email alerts and allow filtering by warehouse."></textarea><div class="report-actions"><span class="report-status" id="reportStatus">5–2,000 characters</span><button type="submit">Submit report</button></div></form></div></div>
+</div>
+<div class="modal" id="commandsModal" role="dialog" aria-modal="true" aria-labelledby="commandsTitle" hidden>
+  <div class="modal-card"><div class="modal-head"><h3 id="commandsTitle">Commands &amp; its-functions</h3><button class="close-modal" type="button" data-close aria-label="Close">×</button></div><div class="modal-body"><div class="command-list">
+    <div class="command-row"><code>help</code><span>Lists every supported report.</span></div>
+    <div class="command-row"><code>inventory status</code><span>Shows available, allocated, in-transit units, and days of cover.</span></div>
+    <div class="command-row"><code>stock risk</code><span>Shows critical SKUs and the reason each product is at risk.</span></div>
+    <div class="command-row"><code>reorder plan</code><span>Calculates recommended reorder quantities and explains the rationale.</span></div>
+    <div class="command-row"><code>purchase plan</code><span>Groups recommended purchases by supplier with estimated costs.</span></div>
+    <div class="command-row"><code>demand forecast</code><span>Shows the 30-day forecast and projected balance or shortfall.</span></div>
+    <div class="command-row"><code>supplier lead times</code><span>Compares quoted and actual supplier lead times.</span></div>
+    <div class="command-row"><code>logistics status</code><span>Shows recorded inbound and in-transit inventory.</span></div>
+    <div class="command-row"><code>NH-HOME-01 details</code><span>Shows the complete inventory, supplier, forecast, and recommendation view for one SKU.</span></div>
+    <div class="command-row"><code>approval policy</code><span>Retrieves the company purchasing-approval policy.</span></div>
+    <div class="command-row"><code>seasonal launch playbook</code><span>Retrieves launch planning guidance.</span></div>
+  </div></div></div>
+</div>
+<script>
+let cid=null;const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function load(){try{let d=await fetch('/api/dashboard').then(r=>r.json()),k=d.kpis;document.querySelectorAll('.kpi b').forEach((e,i)=>e.textContent=[k.skus,k.critical,k.units_on_hand,k.units_in_transit][i].toLocaleString());document.querySelector('#items').innerHTML=d.items.map(x=>`<div class="item"><div><div class="sku">${esc(x.sku)}</div><div class="sub">${esc(x.name)}</div></div><div><b>${x.days_of_cover}</b><div class="sub">days cover</div></div><div class="hide-mobile"><b>${x.lead_days}</b><div class="sub">lead days</div></div><div>${x.recommendation?`<span class="tag ${x.recommendation.priority}">${esc(x.recommendation.priority)} · ${esc(x.recommendation.type)}</span>`:'<span class="tag">Healthy</span>'}</div></div>`).join('')}catch(e){document.querySelector('#items').innerHTML='<p class="empty">Connect the API and PostgreSQL to load data.</p>'}}
+async function ask(text){let m=document.querySelector('#messages');m.insertAdjacentHTML('beforeend',`<div class="msg user">${esc(text)}</div>`);let wait=document.createElement('div');wait.className='msg';wait.textContent='Analyzing company data…';m.append(wait);m.scrollTop=m.scrollHeight;try{let response=await fetch('/api/chat',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({question:text,conversation_id:cid})});if(!response.ok)throw new Error(`API ${response.status}`);let d=await response.json();cid=d.conversation_id;wait.textContent=d.answer}catch(err){wait.textContent='The backend could not complete this report. Check: docker compose logs api --tail 100'}m.scrollTop=m.scrollHeight}
+document.querySelector('#form').addEventListener('submit',e=>{e.preventDefault();let q=document.querySelector('#question'),text=q.value.trim();if(!text)return;q.value='';ask(text)});
+const messages=document.querySelector('#messages'),initialMessages=messages.innerHTML;
+function bindQuick(){document.querySelectorAll('[data-command]').forEach(button=>button.addEventListener('click',()=>ask(button.dataset.command)))}
+function openModal(id){document.getElementById(id).hidden=false;document.body.style.overflow='hidden'}
+function closeModal(modal){modal.hidden=true;document.body.style.overflow=''}
+document.querySelector('#clearChat').addEventListener('click',()=>{messages.innerHTML=initialMessages;cid=null;bindQuick();document.querySelector('#question').focus()});
+document.querySelector('#commandsGuide').addEventListener('click',()=>openModal('commandsModal'));
+document.querySelector('#employeeReport').addEventListener('click',()=>openModal('reportModal'));
+document.querySelector('#systemCheck').addEventListener('click',async()=>{let box=document.querySelector('#checkResults');box.innerHTML='<p class="modal-note">Running database and data-quality checks…</p>';openModal('checkModal');try{let response=await fetch('/api/system-check');if(!response.ok)throw new Error(`API ${response.status}`);let d=await response.json(),s=d.summary;box.innerHTML=`<div class="check-summary"><div class="check-count"><b>${s.passed}</b>Passed</div><div class="check-count"><b>${s.warnings}</b>Warnings</div><div class="check-count"><b>${s.failed}</b>Failed</div></div>${d.checks.map(c=>`<div class="check-row"><div class="check-status ${esc(c.status)}">${esc(c.status)}</div><div><div class="check-name">${esc(c.name)}</div><div class="check-detail">${esc(c.detail)}</div></div></div>`).join('')}<p class="modal-note">Checked ${new Date(d.checked_at).toLocaleString()}</p>`}catch(err){box.innerHTML=`<div class="check-row"><div class="check-status fail">FAIL</div><div><div class="check-name">System check unavailable</div><div class="check-detail">${esc(err.message)}</div></div></div>`}});
+document.querySelector('#reportForm').addEventListener('submit',async e=>{e.preventDefault();let text=document.querySelector('#reportText').value.trim(),status=document.querySelector('#reportStatus');if(text.length<5){status.textContent='Please enter at least 5 characters';return}status.textContent='Saving report…';try{let response=await fetch('/api/employee-reports',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({message:text,user_id:'demo-user'})});if(!response.ok)throw new Error(`API ${response.status}`);let d=await response.json();status.textContent=`Saved — reference ${d.id.slice(0,8)}`;document.querySelector('#reportText').value=''}catch(err){status.textContent=`Could not save: ${err.message}`}});
+document.querySelectorAll('[data-close]').forEach(button=>button.addEventListener('click',()=>closeModal(button.closest('.modal'))));document.querySelectorAll('.modal').forEach(modal=>modal.addEventListener('click',e=>{if(e.target===modal)closeModal(modal)}));document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal:not([hidden])').forEach(closeModal)});
+bindQuick();load();
+</script>
+</body>
+</html>
